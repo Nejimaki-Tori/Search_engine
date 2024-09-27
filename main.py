@@ -9,6 +9,8 @@ import os.path
 wiki = wikipediaapi.Wikipedia("Information Retrieval", 'ru')
 morph = pm.MorphAnalyzer()
 
+mode = 0
+
 titles = [
     "Абхазские_пираты",
     "Абхазские_негры",
@@ -38,10 +40,25 @@ for text in collection_text:
     for sentence in sentences:
         collection_doc.append(sentence.text)
 
-# transforming to lemmas
-collection_morph = \
-    [[morph.parse(word)[0].normal_form
-      for word in map(lambda x: x.text, tokenize(sentence))] for sentence in collection_doc]
+
+if mode == 1:
+    # transforming to lemmas
+    collection_morph = \
+        [[[lemma.normal_form for lemma in morph.parse(word)]
+          for word in map(lambda x: x.text, tokenize(sentence))] for sentence in collection_doc]
+
+    collection_tmp = []
+    for item in collection_morph:
+        buffer = []
+        for sentence in item:
+            for lemma in sentence:
+                buffer.append(lemma)
+        collection_tmp.append(buffer)
+    collection_morph = collection_tmp
+else:
+    collection_morph = \
+        [[morph.parse(word)[0].normal_form
+          for word in map(lambda x: x.text, tokenize(sentence))] for sentence in collection_doc]
 
 # clearing collection
 collection_sent = []
@@ -93,9 +110,21 @@ queries = ['Суперцветение видно даже из космоса.'
 
 for query in queries:
 
-    query_morph = \
-        [morph.parse(word)[0].normal_form
-         for word in map(lambda x: x.text, tokenize(query))]
+
+    if mode == 1:
+        query_morph = \
+            [[lemma.normal_form for lemma in morph.parse(word)]
+             for word in map(lambda x: x.text, tokenize(query))]
+
+        query_tmp = []
+        for words in query_morph:
+            for lemma in words:
+                query_tmp.append(lemma)
+        query_morph = query_tmp
+    else:
+        query_morph = \
+            [morph.parse(word)[0].normal_form
+             for word in map(lambda x: x.text, tokenize(query))]
 
     query_cleared = [word.group(0)
                      for word in map(lambda x: re.fullmatch('[а-яА-ЯёЁ]+(-[а-яА-ЯёЁ]+)?', x), query_morph)
