@@ -9,7 +9,7 @@ import os.path
 wiki = wikipediaapi.Wikipedia("Information Retrieval", 'ru')
 morph = pm.MorphAnalyzer()
 
-mode = 0
+mode = int(input('Enter 1 if you want to add all possible lemmas to collection, else enter 0:\n'))
 
 titles = [
     "Абхазские_пираты",
@@ -41,8 +41,8 @@ for text in collection_text:
         collection_doc.append(sentence.text)
 
 
+# transforming to lemmas
 if mode == 1:
-    # transforming to lemmas
     collection_morph = \
         [[[lemma.normal_form for lemma in morph.parse(word)]
           for word in map(lambda x: x.text, tokenize(sentence))] for sentence in collection_doc]
@@ -110,7 +110,7 @@ queries = ['Суперцветение видно даже из космоса.'
 
 for query in queries:
 
-
+    # query to lemmas
     if mode == 1:
         query_morph = \
             [[lemma.normal_form for lemma in morph.parse(word)]
