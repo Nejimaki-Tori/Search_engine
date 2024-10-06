@@ -159,7 +159,7 @@ for query in queries:
     )
     print('Top 5 relevant documents: ')
     for doc, value in top_5_values_idf:
-        print(f'Document: {doc}\tValue: {value}')
+        print(f'Document: {doc}\nValue: {value}\n')
     print()
     # Cosine similarity
     similarity_tf = [np.dot(doc, tf_query) / (np.linalg.norm(doc) * np.linalg.norm(tf_query))
@@ -174,7 +174,7 @@ for query in queries:
     )
     print('Top 5 relevant documents: ')
     for doc, value in top_5_values_tf:
-        print(f'Document: {doc}\tValue: {value}')
+        print(f'Document: {doc}\nValue: {value}\n')
     print()
     # p(q | d) = (for t in q) П((1 - ld) * p(t) + ld * p(t | M)) - formula
     lds = [0.5, 0.9]
@@ -188,7 +188,6 @@ for query in queries:
                 count += doc.count(elem)
             word_freq[ind_lemmas[elem]] = count
         word_freq = word_freq / words_num
-
         products = []
         for doc in collection_cleared:
             p = 1
@@ -207,7 +206,7 @@ for query in queries:
               )
         print('Top 5 relevant documents: ')
         for doc, value in top_5_values_p:
-            print(f'Document: {doc}\tValue: {value}')
+            print(f'Document: {doc}\nValue: {value}\n')
         print()
     print()
     print('*' * 120)
